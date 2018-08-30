@@ -1,0 +1,50 @@
+/**
+
+* JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+*/
+
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(Exercicio10)
+public class Exercicio10 {
+   public static void main(String args[]) throws ParseException {
+      Exercicio10 x = new Exercicio10(System.in);
+      Exercicio10.S();
+   }
+}
+PARSER_END(Exercicio10)
+SKIP : { " " | "\t" }
+TOKEN : {
+   < #DIGIT: ["0"-"9"] | ["a"-"z"] | ["A" - "Z"] > |
+   < SUM: "+" > |
+   < SUB: "-" > |
+   < MUL: "*" > |
+   < DIV: "/" > |
+   < AP: "(" > |
+   < FP: ")" > |
+   < VAR: (< DIGIT >)* (".")? (< DIGIT >)+ > |
+   < EOL: ["\n","\r"] >
+}
+void S() : {String a;}
+{
+   a = exp() <EOL> {System.out.println("Resultado = "+a); 
+                    System.exit(0); }
+}
+String exp() : {String a,b; Token t;}
+{
+   a=termo1() ((t = < SUM >|t = < SUB >) b=termo1() {a += " " + b + " " + t.image;})*
+   {return a;}
+}
+
+String termo1() : {String a,b; Token t;}
+{
+ 	a=termo2() ((t = < MUL > | t = < DIV >) b=termo2() {a += " " + b + " " + t.image;})*
+ 	{return a;}
+}	
+String termo2() : {String a; Token t;}
+{
+   t =	 < VAR > {return (t.image);} | < AP > a = exp() < FP > { return  a; }
+}
